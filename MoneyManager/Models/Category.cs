@@ -1,15 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace MoneyManager.Models
 {
     public class Category
     {
+        [Key]
         public Guid Id { get; set; }
-        private string Name { get; set; }
-        private int Type { get; set; }
-        private Guid ParentId { get; set; }
+        [NotNull]
+        public string Name { get; set; }
+        [NotNull]
+        public int Type { get; set; }
+        public Guid ParentId { get; set; }
+        private List<Category> Categories { get; set; }
+        private List<Transaction> Transactions { get; set; }
 
         public Category() { }
 
@@ -21,7 +27,12 @@ namespace MoneyManager.Models
             ParentId = parentId;
         }
 
-        private List<Category> Categories { get; set; }
-        private List<Transaction> Transactions { get; set; }
+        public Category(string name, int type)
+        {
+            Id = Guid.NewGuid();
+            Name = name;
+            Type = type;
+        }
+
     }
 }

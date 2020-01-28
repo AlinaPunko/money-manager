@@ -1,16 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace MoneyManager.Models
 {
     public class Transaction
     {
         public Guid Id { get; set; }
+        [NotNull]
         public double Amount { get; set; }
+        [NotNull]
         public DateTime Date { get; set; }
         public string Comment { get; set; }
+        [NotNull]
         public Guid AssetId { get; set; }
+        [NotNull]
         public Guid CategoryId { get; set; }
 
         public Transaction() { }
@@ -24,7 +29,5 @@ namespace MoneyManager.Models
             AssetId = assetId;
             CategoryId = categoryId;
         }
-        
-        private List<Category> Categories { get; set; }
     }
 }

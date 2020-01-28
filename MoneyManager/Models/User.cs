@@ -12,6 +12,7 @@ namespace MoneyManager.Models
         public string Email { get; set; }
         public string Hash { get; set; }
         public string Salt { get; set; }
+        private List<Asset> Assets { get; set; }
 
         public User() { }
 
@@ -20,30 +21,24 @@ namespace MoneyManager.Models
             Id = Guid.NewGuid();
             Name = name;
             Email = email;
-            byte[] salt = GetSalt();
-            Salt = Encoding.Default.GetString(salt, 0, salt.Length);
+            Salt = GetSalt();
             byte[] hash = MD5.Create().ComputeHash((Encoding.Default.GetBytes(password + Salt)));
-            Hash = Encoding.Default.GetString(hash, 0, hash.Length);
+            Hash = Convert.ToBase64String(hash);
         }
 
         private static int saltLengthLimit = 32;
-        private static byte[] GetSalt()
+        private static string GetSalt()
         {
             return GetSalt(saltLengthLimit);
         }
 
-        private static byte[] GetSalt(int maximumSaltLength)
+        private static string GetSalt(int maximumSaltLength)
         {
-            var salt = new byte[maximumSaltLength];
-            using (var random = new RNGCryptoServiceProvider())
-            {
-                random.GetNonZeroBytes(salt);
-            }
+            RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
+            byte[] buff = new byte[maximumSaltLength];
+            rng.GetBytes(buff);
 
-            return salt;
+            return Convert.ToBase64String(buff);
         }
-
-        private List<Asset> Assets { get; set; }
-
     }
 }

@@ -1,17 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace MoneyManager.Models
 {
     public class Asset
     {
         public Guid Id { get; set; }
-        private string Name { get; set; }
-        private Guid UserId { get; set; }
+        [NotNull]
+        public string Name { get; set; }
+        [NotNull]
+        public Guid UserId { get; set; }
 
-        private User User { get; set; }
-        private List<Transaction> Transactions { get; set; }
+        public User User { get; set; }
+        public List<Transaction> Transactions { get; set; }
 
         public Asset() { }
 
