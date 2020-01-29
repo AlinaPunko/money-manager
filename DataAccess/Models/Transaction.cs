@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
+﻿using JetBrains.Annotations;
+using System;
 
-namespace MoneyManager.Models
+namespace DataAccess.Models
 {
     public class Transaction
     {

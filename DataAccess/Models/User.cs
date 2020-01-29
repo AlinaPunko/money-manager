@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace MoneyManager.Models
+namespace DataAccess.Models
 {
     public class User
     {
@@ -12,7 +12,7 @@ namespace MoneyManager.Models
         public string Email { get; set; }
         public string Hash { get; set; }
         public string Salt { get; set; }
-        private List<Asset> Assets { get; set; }
+        private ICollection<Asset> Assets { get; set; }
 
         public User() { }
 

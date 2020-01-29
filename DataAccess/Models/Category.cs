@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
+using JetBrains.Annotations;
 
-namespace MoneyManager.Models
+namespace DataAccess.Models
 {
     public class Category
     {
@@ -13,10 +13,11 @@ namespace MoneyManager.Models
         public string Name { get; set; }
         [NotNull]
         public int Type { get; set; }
-        public Guid ParentId { get; set; }
-        private List<Category> Categories { get; set; }
-        private List<Transaction> Transactions { get; set; }
+        public Guid? ParentId { get; set; }
 
+        public virtual ICollection<Transaction> Transactions { get; set; }
+
+        public virtual Category Parent { get; set; }
         public Category() { }
 
         public Category(string name, int type, Guid parentId)

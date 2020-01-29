@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MoneyManager.Enums
+namespace DataAccess.Enums
 {
-    enum CategoryType
+    public enum CategoryType
     {
         Expense=1,
         Income=2

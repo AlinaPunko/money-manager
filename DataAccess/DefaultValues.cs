@@ -1,10 +1,10 @@
 ﻿using System;
-using MoneyManager.Enums;
-using MoneyManager.Models;
+using DataAccess.Enums;
+using DataAccess.Models;
 
-namespace MoneyManager
+namespace DataAccess
 {
-    public class Autogenerator
+    public class DefaultValues
     {
         public static User[] GenerateDefaultUsers()
         {

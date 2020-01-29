@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
+using JetBrains.Annotations;
 
-namespace MoneyManager.Models
+namespace DataAccess.Models
 {
     public class Asset
     {
@@ -13,7 +13,7 @@ namespace MoneyManager.Models
         public Guid UserId { get; set; }
 
         public User User { get; set; }
-        public List<Transaction> Transactions { get; set; }
+        public ICollection<Transaction> Transactions { get; set; }
 
         public Asset() { }
 
