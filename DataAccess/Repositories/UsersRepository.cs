@@ -30,7 +30,7 @@ namespace DataAccess.Repositories
         {
             return FindById(id);
         }
-
+        
         public User GetUserByEmail(string email)
         {
             return Get(user => user.Email == email).FirstOrDefault();

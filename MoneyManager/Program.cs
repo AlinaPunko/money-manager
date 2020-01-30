@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using DataAccess.Context;
 using DataAccess.Models;
+using DataAccess.Projections;
 using DataAccess.Repositories;
 
 namespace MoneyManager
