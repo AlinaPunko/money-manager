@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
-namespace DataAccess.GenericRepository
+namespace DataAccess.Core
 {
     public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : class
     {
@@ -16,27 +15,21 @@ namespace DataAccess.GenericRepository
             dbSet = context.Set<TEntity>();
         }
 
-        public TEntity FindById(Guid id)
+        protected IQueryable<TEntity> Get(Func<TEntity, bool> predicate=null)
+        {
+            if (predicate == null)
+            {
+                return dbSet.AsQueryable();
+            }
+            return dbSet.Where(predicate).AsQueryable();
+        }
+
+        public TEntity GetById(Guid id)
         {
             return dbSet.Find(id);
         }
 
-        public IReadOnlyList<TEntity> Get()
-        {
-            return dbSet.AsNoTracking().ToList();
-        }
-
-        public IReadOnlyList<TEntity> Get(Func<TEntity, bool> predicate)
-        {
-            return dbSet.AsNoTracking().Where(predicate).ToList();
-        }
-
-        public TEntity GetById(int id)
-        {
-            return dbSet.Find(id);
-        }
-
-        public void Create(TEntity item)
+        public void Add(TEntity item)
         {
             dbSet.Add(item);
             context.SaveChanges();

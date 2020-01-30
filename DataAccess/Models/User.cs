@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -12,7 +13,7 @@ namespace DataAccess.Models
         public string Email { get; set; }
         public string Hash { get; set; }
         public string Salt { get; set; }
-        private ICollection<Asset> Assets { get; set; }
+        public virtual ICollection<Asset> Assets { get; set; }
 
         public User() { }
 

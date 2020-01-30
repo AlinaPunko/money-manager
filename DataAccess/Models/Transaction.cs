@@ -6,15 +6,14 @@ namespace DataAccess.Models
     public class Transaction
     {
         public Guid Id { get; set; }
-        [NotNull]
         public double Amount { get; set; }
-        [NotNull]
         public DateTime Date { get; set; }
         public string Comment { get; set; }
-        [NotNull]
         public Guid AssetId { get; set; }
-        [NotNull]
         public Guid CategoryId { get; set; }
+
+        public virtual Category Category { get; set; }
+        public virtual Asset Asset { get; set; }
 
         public Transaction() { }
 

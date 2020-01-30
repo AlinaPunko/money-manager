@@ -1,41 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
-using DataAccess.GenericRepository;
+using System.Linq;
+using DataAccess.Core;
 using DataAccess.Models;
+using DataAccess.Projections;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.Repositories
 {
     public class AssetsRepository:GenericRepository<Asset>
     {
-        public void AddAsset(Asset asset)
+        public IReadOnlyList<Asset> GetAll()
         {
-            Create(asset);
+            return Get()
+                .ToList();
         }
 
-        public IReadOnlyList<Asset> GetAssets()
+        public new Asset GetById(Guid id)
         {
-            return Get();
+            return base.GetById(id);
         }
 
-        public IReadOnlyList<Asset> GetAssetsByQuery(Func<Asset, bool> predicate)
-        {
-            return Get(predicate);
-        }
 
-        public Asset GetAssetById(Guid id)
+        public List<AssetBalanceInfo> GetAssetBalance(Guid userId)
         {
-            return FindById(id);
-        }
-
-        public void DeleteAsset(Asset asset)
-        {
-            Remove(asset);
-        }
-
-        public void UpdateAsset(Asset asset)
-        {
-            Update(asset);
+            var assets = Get(asset => asset.UserId == userId);
+            var transactionRepository = new TransactionRepository(context);
+            var assetBalanceInfoList = new List<AssetBalanceInfo>();
+            foreach (var asset in assets)
+            {
+                assetBalanceInfoList.Add(new AssetBalanceInfo(asset.Id, asset.Name, transactionRepository.GetBalanceOfTheAsset(asset.Id)));
+            }
+            return assetBalanceInfoList;
         }
 
         public AssetsRepository(DbContext context) : base(context)

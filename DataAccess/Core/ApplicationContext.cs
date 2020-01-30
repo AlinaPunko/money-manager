@@ -3,7 +3,7 @@ using System.Linq;
 using DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace DataAccess.Context
+namespace DataAccess.Core
 {
     public sealed class ApplicationContext :DbContext
     {
@@ -47,6 +47,7 @@ namespace DataAccess.Context
                         Transactions.AddRange(DefaultValues.GenerateDefaultTransactions(assets, categories));
                     }
 
+                    SaveChanges();
                     transaction.Commit();
                 }
                 catch (Exception e)
@@ -56,11 +57,5 @@ namespace DataAccess.Context
                 }
             }
         }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            //InsertDefaultValues();
-        }
-
     }
 }

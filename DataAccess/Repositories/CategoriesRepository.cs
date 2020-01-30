@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using DataAccess.GenericRepository;
+using System.Linq;
+using DataAccess.Core;
 using DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,34 +9,16 @@ namespace DataAccess.Repositories
 {
     public class CategoriesRepository:GenericRepository<Category>
     {
-        public void AddCategory(Category category)
+
+        public IReadOnlyList<Category> GetAll()
         {
-            Create(category);
+            return Get()
+                .ToList();
         }
 
-        public IReadOnlyList<Category> GetCategories()
+        public new Category GetById(Guid id)
         {
-            return Get();
-        }
-
-        public Category GetCategoryById(Guid id)
-        {
-            return FindById(id);
-        }
-
-        public void DeleteCategory(Category category)
-        {
-            Remove(category);
-        }
-
-        public void UpdateCategory(Category category)
-        {
-            Update(category);
-        }
-
-        public IReadOnlyList<Category> GetCategoryByQuery(Func<Category, bool> predicate)
-        {
-            return Get(predicate);
+            return base.GetById(id);
         }
 
         public CategoriesRepository(DbContext context) : base(context)

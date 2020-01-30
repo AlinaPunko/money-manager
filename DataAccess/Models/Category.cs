@@ -11,7 +11,6 @@ namespace DataAccess.Models
         public Guid Id { get; set; }
         [NotNull]
         public string Name { get; set; }
-        [NotNull]
         public int Type { get; set; }
         public Guid? ParentId { get; set; }
 

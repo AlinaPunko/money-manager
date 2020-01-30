@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using DataAccess.GenericRepository;
+using DataAccess.Core;
 using DataAccess.Models;
+using DataAccess.Projections;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 
@@ -13,37 +14,38 @@ namespace DataAccess.Repositories
         
         public void AddUser(User user)
         {
-            Create(user);
+            Add(user);
         }
 
-        public IReadOnlyList<User> GetUsers()
+        public IReadOnlyList<User> GetAll()
         {
-            return Get();
+            return Get()
+                .ToList();
         }
 
         public IReadOnlyList<User> GetUsersSortedByName()
         {
-            return Get().OrderBy(user=>user.Name).ToList();
+            return Get().OrderBy(user=>user.Name)
+                .ToList();
         }
 
-        public User GetUserById(Guid id)
+        public new User GetById(Guid id)
         {
-            return FindById(id);
+            return base.GetById(id);
         }
         
-        public User GetUserByEmail(string email)
+        public User GetByEmail(string email)
         {
-            return Get(user => user.Email == email).FirstOrDefault();
+            return Get(user => user.Email == email)
+                .FirstOrDefault();
         }
 
-        public void DeleteUser(User user)
+        public UserBalanceInfo GetUserWithBalance(Guid id)
         {
-            Remove(user);
-        }
-
-        public void UpdateUser(User user)
-        {
-            Update(user);
+            var user = Get(u => u.Id==id).Include(u => u.Assets.Select(asset => asset.Transactions));
+            //return new UserBalanceInfo(user.Id, user.Name, user.Email, new TransactionRepository(context).GetBalanceOfTheUser(id));
+            return null;
+            
         }
 
         public UsersRepository(DbContext context) : base(context)

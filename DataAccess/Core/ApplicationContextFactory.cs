@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace DataAccess.Context
+namespace DataAccess.Core
 {
     public class ApplicationContextFactory :
         DesignTimeDbContextFactoryBase<ApplicationContext>
