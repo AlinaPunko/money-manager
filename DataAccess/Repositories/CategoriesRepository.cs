@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DataAccess.GenericRepository;
 using DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -30,6 +31,11 @@ namespace DataAccess.Repositories
         public void UpdateCategory(Category category)
         {
             Update(category);
+        }
+
+        public IReadOnlyList<Category> GetCategoryByQuery(Func<Category, bool> predicate)
+        {
+            return Get(predicate);
         }
 
         public CategoriesRepository(DbContext context) : base(context)

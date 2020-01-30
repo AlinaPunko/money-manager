@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DataAccess.Repositories
+namespace DataAccess.GenericRepository
 {
     interface IGenericRepository<TEntity> where TEntity : class
     {

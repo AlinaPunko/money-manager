@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using DataAccess.GenericRepository;
 using DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +16,11 @@ namespace DataAccess.Repositories
         public IReadOnlyList<Asset> GetAssets()
         {
             return Get();
+        }
+
+        public IReadOnlyList<Asset> GetAssetsByQuery(Func<Asset, bool> predicate)
+        {
+            return Get(predicate);
         }
 
         public Asset GetAssetById(Guid id)

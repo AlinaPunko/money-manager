@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 
-namespace DataAccess.Repositories
+namespace DataAccess.GenericRepository
 {
     public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : class
     {
@@ -30,6 +30,7 @@ namespace DataAccess.Repositories
         {
             return dbSet.AsNoTracking().Where(predicate).ToList();
         }
+
         public TEntity GetById(int id)
         {
             return dbSet.Find(id);

@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using DataAccess.GenericRepository;
 using DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace DataAccess.Repositories
 {
@@ -18,11 +21,21 @@ namespace DataAccess.Repositories
             return Get();
         }
 
+        public IReadOnlyList<User> GetUsersSortedByName()
+        {
+            return Get().OrderBy(user=>user.Name).ToList();
+        }
+
         public User GetUserById(Guid id)
         {
             return FindById(id);
         }
-        
+
+        public User GetUserByEmail(string email)
+        {
+            return Get(user => user.Email == email).FirstOrDefault();
+        }
+
         public void DeleteUser(User user)
         {
             Remove(user);

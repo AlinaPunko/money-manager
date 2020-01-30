@@ -1,4 +1,6 @@
-﻿using DataAccess.Models;
+﻿using System;
+using System.Linq;
+using DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.Context
@@ -12,23 +14,52 @@ namespace DataAccess.Context
 
         public ApplicationContext(DbContextOptions options) : base(options)
         {
-            if (Database.CanConnect())
-            {
-                return;
-            }
             Database.Migrate();
+            InsertDefaultValues();
+        }
 
+        private void InsertDefaultValues()
+        {
+            using (var transaction = Database.BeginTransaction())
+            {
+                try
+                {
+                    var users = DefaultValues.GenerateDefaultUsers();
+                    var assets = DefaultValues.GenerateDefaultAssets(users);
+                    var categories = DefaultValues.GenerateDefaultCategories();
+                    if (Users.Count() < 11)
+                    {
+                        Users.AddRange(users);
+                    }
+
+                    if (Assets.Count() < 21)
+                    {
+                        Assets.AddRange(assets);
+                    }
+
+                    if (Categories.Count() < 11)
+                    {
+                        Categories.AddRange(categories);
+                    }
+
+                    if (Transactions.Count() < 1000)
+                    {
+                        Transactions.AddRange(DefaultValues.GenerateDefaultTransactions(assets, categories));
+                    }
+
+                    transaction.Commit();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    transaction.Rollback();
+                }
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            User[] users = DefaultValues.GenerateDefaultUsers();
-            Category[] categories = DefaultValues.GenerateDefaultCategories();
-            Asset[] assets =  DefaultValues.GenerateDefaultAssets(users);
-            modelBuilder.Entity<User>().HasData(users);
-            modelBuilder.Entity<Category>().HasData(categories);
-            modelBuilder.Entity<Asset>().HasData(assets);
-            modelBuilder.Entity<Transaction>().HasData(DefaultValues.GenerateDefaultTransactions(assets, categories));
+            //InsertDefaultValues();
         }
 
     }
