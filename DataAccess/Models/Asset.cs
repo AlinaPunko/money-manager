@@ -10,6 +10,7 @@ namespace DataAccess.Models
         [NotNull]
         public string Name { get; set; }
         public Guid UserId { get; set; }
+        public double Amount { get; set; }
 
         public virtual User User { get; set; }
         public virtual ICollection<Transaction> Transactions { get; set; }
@@ -21,6 +22,15 @@ namespace DataAccess.Models
             Id = Guid.NewGuid();
             Name = name;
             UserId = userId;
+            Amount = 0;
+        }
+
+        public Asset(string name, Guid userId, double amount)
+        {
+            Id = Guid.NewGuid();
+            Name = name;
+            UserId = userId;
+            Amount = amount;
         }
     }
 }
