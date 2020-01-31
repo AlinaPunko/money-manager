@@ -9,12 +9,21 @@ namespace DataAccess.Helpers
     {
         public static double GetBalance(IReadOnlyList<Transaction> transactions)
         {
-            var incomes = transactions
+            return GetIncomes(transactions) - GetOutcomes(transactions);
+        }
+
+        public static double GetIncomes(IReadOnlyList<Transaction> transactions)
+        {
+            return transactions
                 .Where(transaction => transaction.Category.Type == (int)CategoryType.Income)
                 .Sum(transaction => transaction.Amount);
-            var outcomes = transactions.Where(transaction => transaction.Category.Type == (int)CategoryType.Expense)
+        }
+
+        public static double GetOutcomes(IReadOnlyList<Transaction> transactions)
+        {
+            return transactions
+                .Where(transaction => transaction.Category.Type == (int)CategoryType.Expense)
                 .Sum(transaction => transaction.Amount);
-            return incomes - outcomes;
         }
     }
 }

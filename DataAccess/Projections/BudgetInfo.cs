@@ -4,19 +4,19 @@ using System.Text;
 
 namespace DataAccess.Projections
 {
-    class IncomeExpensesForPeriod
+    public class BudgetInfo
     {
         public double Income { get; set; }
         public double Expenses { get; set; }
         public int Month { get; set; }
         public int Year { get; set; }
 
-        public IncomeExpensesForPeriod(double income, double expenses, DateTime date)
+        public BudgetInfo(double income, double expenses, int month, int year)
         {
             Income = income;
             Expenses = expenses;
-            Month = date.Month;
-            Year = date.Year;
+            Month = month;
+            Year = year;
         }
     }
 }

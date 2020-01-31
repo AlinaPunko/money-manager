@@ -60,7 +60,7 @@ namespace DataAccess.Core
             var optionsBuilder =
                  new DbContextOptionsBuilder<TContext>();
 
-            optionsBuilder.UseSqlServer(connectionString);
+            optionsBuilder.UseLazyLoadingProxies().UseSqlServer(connectionString);
 
             var options = optionsBuilder.Options;
 

@@ -25,7 +25,7 @@ namespace DataAccess
 
         public static Category[] GenerateDefaultCategories()
         {
-            Category[] categories = new Category[11];
+            Category[] categories = new Category[13];
             categories[0] = new Category("Transportation", (int)CategoryType.Expense);
             categories[1] = new Category("Food", (int)CategoryType.Expense);
             categories[2] = new Category("Social Life", (int)CategoryType.Expense);
@@ -37,6 +37,8 @@ namespace DataAccess
             categories[8] = new Category("Taxi", (int)CategoryType.Expense, categories[0].Id);
             categories[9] = new Category("Public transport", (int)CategoryType.Expense, categories[0].Id);
             categories[10] = new Category("Parking", (int)CategoryType.Expense, categories[0].Id);
+            categories[11] = new Category("Bus", (int)CategoryType.Expense, categories[9].Id);
+            categories[12] = new Category("Trolleybus", (int)CategoryType.Expense, categories[9].Id);
             return categories;
         }
 
@@ -52,16 +54,28 @@ namespace DataAccess
             
         }
 
+        static readonly Random rnd = new Random();
+
+        public static DateTime GetRandomDate(DateTime from, DateTime to)
+        {
+            var range = to - from;
+
+            var randTimeSpan = new TimeSpan((long)(rnd.NextDouble() * range.Ticks));
+
+            return from + randTimeSpan;
+        }
+
         public static Transaction[] GenerateDefaultTransactions(Asset[] assets, Category[] categories)
         {
             Transaction[] transactions = new Transaction[1001];
             Random random = new Random();
             for (int i = 0; i <= transactions.Length - 1; i++)
             {
-                transactions[i] = new Transaction(random.NextDouble()*100, DateTime.Now, null, assets[i/50].Id, categories[i/100].Id);
+                transactions[i] = new Transaction(random.NextDouble() * 100,
+                        GetRandomDate(new DateTime(2018, 12, 1), DateTime.Today), null,
+                        assets[i / 50].Id, categories[i / 80].Id);
             }
             return transactions;
-
         }
     }
 }

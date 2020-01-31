@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using DataAccess.Core;
+using DataAccess.Enums;
 using DataAccess.Models;
 using DataAccess.Repositories;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions.Infrastructure;
 
 namespace MoneyManager
 {
@@ -12,15 +14,8 @@ namespace MoneyManager
         {
             using (var context = new ApplicationContextFactory().Create())
             {
-
-                var usersRepository = new UsersRepository(context);
-                usersRepository.GetUserWithBalance(new Guid("7EFC54B1-3B1B-4CAA-AB0D-1C2E21D8E2CB"));
-                //users.GetUserWithBalance();
-                //var repository = new TransactionRepository(context);
-                //repository.DeleteTransactionsOfUserInCurrentMonth(new Guid("3039D05D-57D2-4339-A3FB-1D0AD8A8E4C3"));
-                //var assetRepository = new AssetsRepository(context);
-                //assetRepository.GetAssetBalance(new Guid("3039D05D-57D2-4339-A3FB-1D0AD8A8E4C3"));
-
+                var repository = new CategoriesRepository(context);
+                var x = repository.GetAmountOfParentCategories((int)CategoryType.Expense, new Guid("32C016A0-0035-4A4F-A334-7FA0A8F4E964"));
             }
         }
     }

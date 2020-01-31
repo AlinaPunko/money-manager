@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 using DataAccess.Core;
 using DataAccess.Enums;
 using DataAccess.Helpers;
@@ -24,32 +25,40 @@ namespace DataAccess.Repositories
             return base.GetById(id);
         }
         
-        public double GetBalanceOfTheAsset(Guid assetId)
-        {
-            var transactions = Get(t => t.AssetId == assetId)
-                .ToList();
-            return BalanceHelper.GetBalance(transactions);
-        }
-
-        public double GetBalanceOfTheUser(Guid userId)
+        public IReadOnlyList<FullTransactionInfo> GetTransactionsByUser(Guid userId)
         {
             var transactions = Get(t => t.Asset.UserId == userId)
-                .ToList();
-            return BalanceHelper.GetBalance(transactions);
-        }
-
-        public IReadOnlyList<Transaction> GetTransactionsByUser(Guid userId)
-        {
-            return Get(t => t.Asset.UserId == userId)
                 .OrderByDescending(t => t.Date)
                 .ThenBy(t => t.Asset.Name)
-                .ThenBy(t => t.Category.Name).ToList(); 
+                .ThenBy(t => t.Category.Name).ToList();
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<Transaction, FullTransactionInfo>()
+                    .ForMember(fullInfo => fullInfo.AssetName,
+                        fullInfo => fullInfo.MapFrom(t => t.Asset.Name))
+                    .ForMember(fullInfo => fullInfo.CategoryName,
+                        fullInfo => fullInfo.MapFrom(t => t.Category.Name))
+                    .ForMember(fullInfo => fullInfo.ParentName,
+                        fullInfo => fullInfo.MapFrom(t => t.Category.Parent.Name));
+            });
+            var mapper = config.CreateMapper();
+            return mapper.Map<IReadOnlyList<FullTransactionInfo>>(transactions);
         }
 
-        public IReadOnlyList<Transaction> GetIncomeExpensesForPeriod(Guid userId)
+        public IReadOnlyList<BudgetInfo> GetBudgetForPeriod(Guid userId, DateTime startDate, DateTime endDate)
         {
-            //return Get(t => t.Asset.UserId == userId).ToList().OrderBy(t => t.Date);
-            return null;
+            var transactions = 
+                Get(t => t.Asset.UserId == userId && t.Date >= startDate && t.Date <= endDate)
+                .OrderBy(t => t.Date)
+                .ToList();
+
+            double incomes = BalanceHelper.GetIncomes(transactions);
+            double expenses = BalanceHelper.GetOutcomes(transactions);
+
+            return transactions
+                .GroupBy(b => new { b.Date.Month, b.Date.Year },
+                    (key, group) => new BudgetInfo(incomes, expenses, key.Month, key.Year))
+                .ToList();
         }
 
         public void DeleteTransactionsOfUserInCurrentMonth(Guid userId)

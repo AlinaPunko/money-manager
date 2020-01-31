@@ -14,8 +14,11 @@ namespace DataAccess.Core
 
         public ApplicationContext(DbContextOptions options) : base(options)
         {
-            Database.Migrate();
-            InsertDefaultValues();
+            if (!Database.CanConnect())
+            {
+                Database.Migrate();
+                InsertDefaultValues();
+            }
         }
 
         private void InsertDefaultValues()
@@ -27,25 +30,12 @@ namespace DataAccess.Core
                     var users = DefaultValues.GenerateDefaultUsers();
                     var assets = DefaultValues.GenerateDefaultAssets(users);
                     var categories = DefaultValues.GenerateDefaultCategories();
-                    if (Users.Count() < 11)
-                    {
-                        Users.AddRange(users);
-                    }
-
-                    if (Assets.Count() < 21)
-                    {
-                        Assets.AddRange(assets);
-                    }
-
-                    if (Categories.Count() < 11)
-                    {
-                        Categories.AddRange(categories);
-                    }
-
-                    if (Transactions.Count() < 1000)
-                    {
-                        Transactions.AddRange(DefaultValues.GenerateDefaultTransactions(assets, categories));
-                    }
+                    var transactions = 
+                        DefaultValues.GenerateDefaultTransactions(assets, categories);
+                    Users.AddRange(users);
+                    Assets.AddRange(assets);
+                    Categories.AddRange(categories);
+                    Transactions.AddRange(transactions);
 
                     SaveChanges();
                     transaction.Commit();

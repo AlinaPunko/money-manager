@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 using DataAccess.Core;
+using DataAccess.Helpers;
 using DataAccess.Models;
 using DataAccess.Projections;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.Repositories
 {
-    public class AssetsRepository:GenericRepository<Asset>
+    public class AssetsRepository : GenericRepository<Asset>
     {
         public IReadOnlyList<Asset> GetAll()
         {
@@ -24,12 +26,21 @@ namespace DataAccess.Repositories
 
         public List<AssetBalanceInfo> GetAssetBalance(Guid userId)
         {
-            var assets = Get(asset => asset.UserId == userId);
-            var transactionRepository = new TransactionRepository(context);
+            var assets = Get(a => a.UserId == userId)
+                .Include(a => a.Transactions);
             var assetBalanceInfoList = new List<AssetBalanceInfo>();
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<Asset, AssetBalanceInfo>();
+            });
+            var mapper = config.CreateMapper();
             foreach (var asset in assets)
             {
-                assetBalanceInfoList.Add(new AssetBalanceInfo(asset.Id, asset.Name, transactionRepository.GetBalanceOfTheAsset(asset.Id)));
+                var transactions = asset.Transactions.ToList();
+                var balance = BalanceHelper.GetBalance(transactions);
+                var assetBalanceInfo = mapper.Map<Asset, AssetBalanceInfo>(asset);
+                assetBalanceInfo.Balance = balance;
+                assetBalanceInfoList.Add(assetBalanceInfo);
             }
             return assetBalanceInfoList;
         }

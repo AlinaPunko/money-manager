@@ -16,6 +16,7 @@ namespace DataAccess.Models
 
         public virtual ICollection<Transaction> Transactions { get; set; }
 
+        public virtual ICollection<Category> Children { get; set; }
         public virtual Category Parent { get; set; }
         public Category() { }
 

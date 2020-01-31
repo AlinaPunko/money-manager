@@ -9,15 +9,5 @@ namespace DataAccess.Projections
         public string Name { get; set; }
         public string Email { get; set; }
         public double Balance { get; set; }
-
-        public UserBalanceInfo() { }
-
-        public UserBalanceInfo(Guid id, string name, string email, double balance)
-        {
-            Id = id;
-            Name = name;
-            Email = email;
-            Balance = balance;
-        }
     }
 }
