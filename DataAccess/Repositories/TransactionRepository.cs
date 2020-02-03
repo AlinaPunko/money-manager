@@ -36,11 +36,11 @@ namespace DataAccess.Repositories
 
             if (transaction.Category.Type == CategoryType.Income)
             {
-                transaction.Asset.Amount += transaction.Amount;
+                transaction.Asset.Balance += transaction.Amount;
             }
             else
             {
-                transaction.Asset.Amount -= transaction.Amount;
+                transaction.Asset.Balance -= transaction.Amount;
             }
 
             context.SaveChanges();
@@ -51,11 +51,11 @@ namespace DataAccess.Repositories
             base.Remove(transaction);
             if (transaction.Category.Type == CategoryType.Income)
             {
-                transaction.Asset.Amount -= transaction.Amount;
+                transaction.Asset.Balance -= transaction.Amount;
             }
             else
             {
-                transaction.Asset.Amount += transaction.Amount;
+                transaction.Asset.Balance += transaction.Amount;
             }
 
             context.SaveChanges();
@@ -63,18 +63,18 @@ namespace DataAccess.Repositories
 
         public new void Update(Transaction transaction)
         {
-            double previousAmountValue = Convert.ToDouble(context.Entry(transaction).OriginalValues["Amount"]);
+            double previousAmountValue = Convert.ToDouble(context.Entry(transaction).OriginalValues["Balance"]);
             base.Update(transaction);
 
             if (transaction.Category.Type == CategoryType.Income)
             {
-                transaction.Asset.Amount -= previousAmountValue;
-                transaction.Asset.Amount += transaction.Amount;
+                transaction.Asset.Balance -= previousAmountValue;
+                transaction.Asset.Balance += transaction.Amount;
             }
             else
             {
-                transaction.Asset.Amount += previousAmountValue;
-                transaction.Asset.Amount -= transaction.Amount;
+                transaction.Asset.Balance += previousAmountValue;
+                transaction.Asset.Balance -= transaction.Amount;
             }
 
             context.SaveChanges();

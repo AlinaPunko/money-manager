@@ -41,11 +41,11 @@ namespace DataAccess.Core
                     {
                         if (transactionsItem.Category.Type == CategoryType.Income)
                         {
-                            transactionsItem.Asset.Amount += transactionsItem.Amount;
+                            transactionsItem.Asset.Balance += transactionsItem.Amount;
                         }
                         else
                         {
-                            transactionsItem.Asset.Amount -= transactionsItem.Amount;
+                            transactionsItem.Asset.Balance -= transactionsItem.Amount;
                         }
                     }
 

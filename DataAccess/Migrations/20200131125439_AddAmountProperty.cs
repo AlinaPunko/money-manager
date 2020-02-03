@@ -7,7 +7,7 @@ namespace DataAccess.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<double>(
-                name: "Amount",
+                name: "Balance",
                 table: "Assets",
                 nullable: false,
                 defaultValue: 0.0);
@@ -16,7 +16,7 @@ namespace DataAccess.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "Amount",
+                name: "Balance",
                 table: "Assets");
         }
     }
