@@ -25,19 +25,21 @@ namespace DataAccess.Repositories
         public int GetNumberOfParents(Category category,int amount)
         {
             int numberOfParents=amount;
-            if (category.ParentId != null)
+            if (category.ParentId == null)
             {
-                numberOfParents++;
-                return GetNumberOfParents(category.Parent, numberOfParents);
+                return numberOfParents;
             }
 
-            return numberOfParents;
+            numberOfParents++;
+            return GetNumberOfParents(category.Parent, numberOfParents);
+
         }
 
         public List<OperationTypeInfo> GetAmountOfParentCategories(int operationType, Guid userId)
         {
             var categories = Get(c => c.Transactions.Any(t => t.Asset.UserId == userId && t.Date.Month == DateTime.Now.Month));
-            List<OperationTypeInfo> operationTypeInfoList = new List<OperationTypeInfo>();
+            var operationTypeInfoList = new List<OperationTypeInfo>();
+
             foreach (var category in categories)
             {
                 OperationTypeInfo operationTypeInfo = new OperationTypeInfo
@@ -47,6 +49,7 @@ namespace DataAccess.Repositories
                 };
                 operationTypeInfoList.Add(operationTypeInfo);
             }
+
             return operationTypeInfoList;
         }
 

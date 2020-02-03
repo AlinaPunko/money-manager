@@ -29,19 +29,21 @@ namespace DataAccess.Repositories
         {
             base.Add(transaction);
             var addedTransaction = Get().Include(t => t.Asset).Include(t => t.Category).FirstOrDefault(t => t.Id==transaction.Id);
-            if (addedTransaction != null)
+            if (addedTransaction == null)
             {
-                if (transaction.Category.Type == CategoryType.Income)
-                {
-                    transaction.Asset.Amount += transaction.Amount;
-                }
-                else
-                {
-                    transaction.Asset.Amount -= transaction.Amount;
-                }
-
-                context.SaveChanges();
+                return;
             }
+
+            if (transaction.Category.Type == CategoryType.Income)
+            {
+                transaction.Asset.Amount += transaction.Amount;
+            }
+            else
+            {
+                transaction.Asset.Amount -= transaction.Amount;
+            }
+
+            context.SaveChanges();
         }
 
         public new void Remove(Transaction transaction)
@@ -83,7 +85,9 @@ namespace DataAccess.Repositories
             var transactions = Get(t => t.Asset.UserId == userId)
                 .OrderByDescending(t => t.Date)
                 .ThenBy(t => t.Asset.Name)
-                .ThenBy(t => t.Category.Name).ToList();
+                .ThenBy(t => t.Category.Name)
+                .ToList();
+
             var config = new MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<Transaction, FullTransactionInfo>()
@@ -94,6 +98,7 @@ namespace DataAccess.Repositories
                     .ForMember(fullInfo => fullInfo.ParentName,
                         fullInfo => fullInfo.MapFrom(t => t.Category.Parent.Name));
             });
+
             var mapper = config.CreateMapper();
             return mapper.Map<IReadOnlyList<FullTransactionInfo>>(transactions);
         }
@@ -117,6 +122,7 @@ namespace DataAccess.Repositories
         public void DeleteTransactionsOfUserInCurrentMonth(Guid userId)
         {
             var transactions = Get(t => t.Asset.UserId == userId && t.Date.Month==DateTime.Now.Month);
+
             foreach (var transaction in transactions)
             {
                 Remove(transaction);

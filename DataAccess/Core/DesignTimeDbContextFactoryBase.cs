@@ -15,6 +15,7 @@ namespace DataAccess.Core
                 Directory.GetCurrentDirectory(),
                 Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"));
         }
+
         protected abstract TContext CreateNewInstance(
             DbContextOptions<TContext> options);
 
@@ -59,9 +60,7 @@ namespace DataAccess.Core
 
             var optionsBuilder =
                  new DbContextOptionsBuilder<TContext>();
-
             optionsBuilder.UseLazyLoadingProxies().UseSqlServer(connectionString);
-
             var options = optionsBuilder.Options;
 
             return CreateNewInstance(options);

@@ -19,6 +19,7 @@ namespace DataAccess.Models
 
         public virtual ICollection<Category> Children { get; set; }
         public virtual Category Parent { get; set; }
+
         public Category() { }
 
         public Category(string name, CategoryType type, Guid parentId)

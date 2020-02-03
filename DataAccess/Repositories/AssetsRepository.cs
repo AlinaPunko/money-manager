@@ -34,6 +34,7 @@ namespace DataAccess.Repositories
                 cfg.CreateMap<Asset, AssetBalanceInfo>();
             });
             var mapper = config.CreateMapper();
+
             foreach (var asset in assets)
             {
                 var transactions = asset.Transactions.ToList();

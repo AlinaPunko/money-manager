@@ -1,5 +1,4 @@
 ﻿using System;
-using DataAccess.Models;
 
 namespace DataAccess.Projections
 {

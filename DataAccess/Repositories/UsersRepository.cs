@@ -52,25 +52,23 @@ namespace DataAccess.Repositories
                 .Include(u => u.Assets.Select(asset => asset.Transactions))
                 .FirstOrDefault();
             double balance = 0;
-            if (user != null)
-            {
-                foreach (var asset in user.Assets)
-                {
-                    var transactions = asset.Transactions.ToList();
-                    balance += BalanceHelper.GetBalance(transactions);
-                }
+            if (user == null)
+                return null;
 
-                var config = new MapperConfiguration(cfg =>
-                {
-                    cfg.CreateMap<User, UserBalanceInfo>();
-                });
-                var mapper = config.CreateMapper();
-                var userBalanceInfo = mapper.Map<User, UserBalanceInfo>(user);
-                userBalanceInfo.Balance = balance;
-                return userBalanceInfo;
+            foreach (var asset in user.Assets)
+            {
+                var transactions = asset.Transactions.ToList();
+                balance += BalanceHelper.GetBalance(transactions);
             }
 
-            return null;
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<User, UserBalanceInfo>();
+            });
+            var mapper = config.CreateMapper();
+            var userBalanceInfo = mapper.Map<User, UserBalanceInfo>(user);
+            userBalanceInfo.Balance = balance;
+            return userBalanceInfo;
         }
 
         public UsersRepository(DbContext context) : base(context)

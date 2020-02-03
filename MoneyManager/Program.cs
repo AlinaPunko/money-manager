@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using DataAccess.Core;
-using DataAccess.Enums;
-using DataAccess.Models;
 using DataAccess.Repositories;
-using Microsoft.EntityFrameworkCore.Metadata.Conventions.Infrastructure;
 
 namespace MoneyManager
 {
