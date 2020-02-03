@@ -24,7 +24,60 @@ namespace DataAccess.Repositories
         {
             return base.GetById(id);
         }
-        
+
+        public new void Add(Transaction transaction)
+        {
+            base.Add(transaction);
+            var addedTransaction = Get().Include(t => t.Asset).Include(t => t.Category).FirstOrDefault(t => t.Id==transaction.Id);
+            if (addedTransaction != null)
+            {
+                if (transaction.Category.Type == CategoryType.Income)
+                {
+                    transaction.Asset.Amount += transaction.Amount;
+                }
+                else
+                {
+                    transaction.Asset.Amount -= transaction.Amount;
+                }
+
+                context.SaveChanges();
+            }
+        }
+
+        public new void Remove(Transaction transaction)
+        {
+            base.Remove(transaction);
+            if (transaction.Category.Type == CategoryType.Income)
+            {
+                transaction.Asset.Amount -= transaction.Amount;
+            }
+            else
+            {
+                transaction.Asset.Amount += transaction.Amount;
+            }
+
+            context.SaveChanges();
+        }
+
+        public new void Update(Transaction transaction)
+        {
+            double previousAmountValue = Convert.ToDouble(context.Entry(transaction).OriginalValues["Amount"]);
+            base.Update(transaction);
+
+            if (transaction.Category.Type == CategoryType.Income)
+            {
+                transaction.Asset.Amount -= previousAmountValue;
+                transaction.Asset.Amount += transaction.Amount;
+            }
+            else
+            {
+                transaction.Asset.Amount += previousAmountValue;
+                transaction.Asset.Amount -= transaction.Amount;
+            }
+
+            context.SaveChanges();
+        }
+
         public IReadOnlyList<FullTransactionInfo> GetTransactionsByUser(Guid userId)
         {
             var transactions = Get(t => t.Asset.UserId == userId)

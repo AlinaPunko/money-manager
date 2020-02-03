@@ -26,19 +26,19 @@ namespace DataAccess
         public static Category[] GenerateDefaultCategories()
         {
             Category[] categories = new Category[13];
-            categories[0] = new Category("Transportation", (int)CategoryType.Expense);
-            categories[1] = new Category("Food", (int)CategoryType.Expense);
-            categories[2] = new Category("Social Life", (int)CategoryType.Expense);
-            categories[3] = new Category("Culture", (int)CategoryType.Expense);
-            categories[4] = new Category("Self-development", (int)CategoryType.Expense);
-            categories[5] = new Category("Salary", (int)CategoryType.Income);
-            categories[6] = new Category("Bonus", (int)CategoryType.Income);
-            categories[7] = new Category("Petty cash", (int)CategoryType.Income);
-            categories[8] = new Category("Taxi", (int)CategoryType.Expense, categories[0].Id);
-            categories[9] = new Category("Public transport", (int)CategoryType.Expense, categories[0].Id);
-            categories[10] = new Category("Parking", (int)CategoryType.Expense, categories[0].Id);
-            categories[11] = new Category("Bus", (int)CategoryType.Expense, categories[9].Id);
-            categories[12] = new Category("Trolleybus", (int)CategoryType.Expense, categories[9].Id);
+            categories[0] = new Category("Transportation", CategoryType.Expense);
+            categories[1] = new Category("Food", CategoryType.Expense);
+            categories[2] = new Category("Social Life", CategoryType.Expense);
+            categories[3] = new Category("Culture", CategoryType.Expense);
+            categories[4] = new Category("Self-development", CategoryType.Expense);
+            categories[5] = new Category("Salary", CategoryType.Income);
+            categories[6] = new Category("Bonus", CategoryType.Income);
+            categories[7] = new Category("Petty cash", CategoryType.Income);
+            categories[8] = new Category("Taxi", CategoryType.Expense, categories[0].Id);
+            categories[9] = new Category("Public transport", CategoryType.Expense, categories[0].Id);
+            categories[10] = new Category("Parking", CategoryType.Expense, categories[0].Id);
+            categories[11] = new Category("Bus", CategoryType.Expense, categories[9].Id);
+            categories[12] = new Category("Trolleybus", CategoryType.Expense, categories[9].Id);
             return categories;
         }
 

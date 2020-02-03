@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Linq;
+using DataAccess.Enums;
 using DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -32,10 +32,22 @@ namespace DataAccess.Core
                     var categories = DefaultValues.GenerateDefaultCategories();
                     var transactions = 
                         DefaultValues.GenerateDefaultTransactions(assets, categories);
+
                     Users.AddRange(users);
                     Assets.AddRange(assets);
                     Categories.AddRange(categories);
                     Transactions.AddRange(transactions);
+                    foreach (var transactionsItem in transactions)
+                    {
+                        if (transactionsItem.Category.Type == CategoryType.Income)
+                        {
+                            transactionsItem.Asset.Amount += transactionsItem.Amount;
+                        }
+                        else
+                        {
+                            transactionsItem.Asset.Amount -= transactionsItem.Amount;
+                        }
+                    }
 
                     SaveChanges();
                     transaction.Commit();

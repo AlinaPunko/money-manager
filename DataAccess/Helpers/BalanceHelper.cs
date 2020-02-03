@@ -15,14 +15,14 @@ namespace DataAccess.Helpers
         public static double GetIncomes(IReadOnlyList<Transaction> transactions)
         {
             return transactions
-                .Where(transaction => transaction.Category.Type == (int)CategoryType.Income)
+                .Where(transaction => transaction.Category.Type == CategoryType.Income)
                 .Sum(transaction => transaction.Amount);
         }
 
         public static double GetOutcomes(IReadOnlyList<Transaction> transactions)
         {
             return transactions
-                .Where(transaction => transaction.Category.Type == (int)CategoryType.Expense)
+                .Where(transaction => transaction.Category.Type == CategoryType.Expense)
                 .Sum(transaction => transaction.Amount);
         }
     }

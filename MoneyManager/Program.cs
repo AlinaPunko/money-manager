@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using DataAccess.Core;
 using DataAccess.Enums;
 using DataAccess.Models;
@@ -14,8 +15,11 @@ namespace MoneyManager
         {
             using (var context = new ApplicationContextFactory().Create())
             {
-                var repository = new CategoriesRepository(context);
-                var x = repository.GetAmountOfParentCategories((int)CategoryType.Expense, new Guid("32C016A0-0035-4A4F-A334-7FA0A8F4E964"));
+                var repository = new TransactionRepository(context);
+                var transaction =
+                    repository.GetById(new Guid("C5686806-E088-48B8-8FB1-019DC4474979"));
+                transaction.Amount = 10;
+                repository.Update(transaction);
             }
         }
     }
