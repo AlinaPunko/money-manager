@@ -4,6 +4,7 @@ using System.Linq;
 using AutoMapper;
 using DataAccess.Core;
 using DataAccess.Helpers;
+using DataAccess.MapperProfiles;
 using DataAccess.Models;
 using DataAccess.Projections;
 using Microsoft.EntityFrameworkCore;
@@ -21,14 +22,14 @@ namespace DataAccess.Repositories
 
         public IReadOnlyList<UserPublicInfo> GetUsersSortedByName()
         {
-            List<User> orderedUsers =  Get().OrderBy(user=>user.Name)
+            List<User> orderedUsers =  Get()
+                .OrderBy(user=>user.Name)
                 .ToList();
-            MapperConfiguration config = new MapperConfiguration(cfg => {
-                cfg.CreateMap<User, UserPublicInfo>();
-            });
 
+            MapperConfiguration config = new MapperConfiguration(cfg => cfg.AddProfile<UserPublicInfoProfile>());
             IMapper mapper = config.CreateMapper();
-            return mapper.Map<List<User>, IReadOnlyList<UserPublicInfo>>(orderedUsers);
+
+            return mapper.Map<IReadOnlyList<UserPublicInfo>>(orderedUsers);
         }
 
         public User GetByEmail(string email)
@@ -42,19 +43,16 @@ namespace DataAccess.Repositories
             User user = Get(u => u.Id==id)
                 .Include(u => u.Assets.Select(asset => asset.Transactions))
                 .FirstOrDefault();
+
             if (user == null)
-                return null;
-
-            double balance = BalanceHelper.GetUserBalance(user);
-
-            MapperConfiguration config = new MapperConfiguration(cfg =>
             {
-                cfg.CreateMap<User, UserBalanceInfo>();
-            });
+                return null;
+            }
 
+            MapperConfiguration config = new MapperConfiguration(cfg => cfg.AddProfile<UserBalanceInfoProfile>());
             IMapper mapper = config.CreateMapper();
-            UserBalanceInfo userBalanceInfo = mapper.Map<User, UserBalanceInfo>(user);
-            userBalanceInfo.Balance = balance;
+
+            UserBalanceInfo userBalanceInfo = mapper.Map<UserBalanceInfo>(user);
             return userBalanceInfo;
         }
     }

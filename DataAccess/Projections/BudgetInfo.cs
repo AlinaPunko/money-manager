@@ -6,13 +6,5 @@
         public double Expenses { get; set; }
         public int Month { get; set; }
         public int Year { get; set; }
-
-        public BudgetInfo(double income, double expenses, int month, int year)
-        {
-            Income = income;
-            Expenses = expenses;
-            Month = month;
-            Year = year;
-        }
     }
 }

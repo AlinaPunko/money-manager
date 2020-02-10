@@ -4,6 +4,7 @@ using System.Linq;
 using AutoMapper;
 using DataAccess.Core;
 using DataAccess.Helpers;
+using DataAccess.MapperProfiles;
 using DataAccess.Models;
 using DataAccess.Projections;
 using Microsoft.EntityFrameworkCore;
@@ -23,7 +24,11 @@ namespace DataAccess.Repositories
         public new void Add(Transaction transaction)
         {
             base.Add(transaction);
-            Transaction addedTransaction = Get().Include(t => t.Asset).Include(t => t.Category).FirstOrDefault(t => t.Id==transaction.Id);
+            Transaction addedTransaction = Get()
+                .Include(t => t.Asset)
+                .Include(t => t.Category)
+                .FirstOrDefault(t => t.Id==transaction.Id);
+
             if (addedTransaction == null)
             {
                 return;
@@ -83,18 +88,9 @@ namespace DataAccess.Repositories
                 .ThenBy(t => t.Category.Name)
                 .ToList();
 
-            MapperConfiguration config = new MapperConfiguration(cfg =>
-            {
-                cfg.CreateMap<Transaction, FullTransactionInfo>()
-                    .ForMember(fullInfo => fullInfo.AssetName,
-                        fullInfo => fullInfo.MapFrom(t => t.Asset.Name))
-                    .ForMember(fullInfo => fullInfo.CategoryName,
-                        fullInfo => fullInfo.MapFrom(t => t.Category.Name))
-                    .ForMember(fullInfo => fullInfo.ParentName,
-                        fullInfo => fullInfo.MapFrom(t => t.Category.Parent.Name));
-            });
-
+            MapperConfiguration config = new MapperConfiguration(cfg => cfg.AddProfile<FullTransactionInfoProfile>());
             IMapper mapper = config.CreateMapper();
+
             return mapper.Map<IReadOnlyList<FullTransactionInfo>>(transactions);
         }
 
@@ -110,11 +106,21 @@ namespace DataAccess.Repositories
 
             return transactions
                 .GroupBy(b => new { b.Date.Month, b.Date.Year },
-                    (key, group) => new BudgetInfo(incomes, expenses, key.Month, key.Year))
+                    (key, group) =>
+                    {
+                        BudgetInfo info = new BudgetInfo
+                        {
+                            Expenses = expenses,
+                            Income = incomes,
+                            Month = key.Month,
+                            Year = key.Year
+                        };
+                        return info;
+                    })
                 .ToList();
         }
 
-        public void DeleteTransactionsOfUserInCurrentMonth(Guid userId)
+        public void DeleteUserTransactionsInCurrentMonth(Guid userId)
         {
             IQueryable<Transaction> transactions = Get(t => t.Asset.UserId == userId && t.Date.Month==DateTime.Now.Month);
 

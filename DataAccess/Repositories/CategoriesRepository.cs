@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 using DataAccess.Core;
+using DataAccess.Helpers;
+using DataAccess.MapperProfiles;
 using DataAccess.Models;
 using DataAccess.Projections;
 using Microsoft.EntityFrameworkCore;
@@ -18,30 +21,19 @@ namespace DataAccess.Repositories
                 .ToList();
         }
 
-        public int GetNumberOfParents(Category category,int amount)
-        {
-            int numberOfParents=amount;
-            if (category.ParentId == null)
-            {
-                return numberOfParents;
-            }
 
-            numberOfParents++;
-            return GetNumberOfParents(category.Parent, numberOfParents);
-        }
-
-        public List<OperationTypeInfo> GetAmountOfParentCategories(int operationType, Guid userId)
+        public List<OperationTypeInfo> GetAmountOfParentCategories(CategoryType categoryType, Guid userId)
         {
-            IQueryable<Category> categories = Get(c => c.Transactions.Any(t => t.Asset.UserId == userId && t.Date.Month == DateTime.Now.Month));
+            IQueryable<Category> categories = Get(c => c.Transactions.Any(t => t.Asset.UserId == userId && t.Date.Month == DateTime.Now.Month))
+                .Where(c => c.Type== categoryType);
             List<OperationTypeInfo> operationTypeInfoList = new List<OperationTypeInfo>();
+
+            MapperConfiguration config = new MapperConfiguration(cfg => cfg.AddProfile<OperationTypeInfoProfile>());
+            IMapper mapper = config.CreateMapper();
 
             foreach (Category category in categories)
             {
-                OperationTypeInfo operationTypeInfo = new OperationTypeInfo
-                {
-                    Name = category.Name,
-                    Amount = GetNumberOfParents(category, 0)
-                };
+                OperationTypeInfo operationTypeInfo = mapper.Map<OperationTypeInfo>(category);
                 operationTypeInfoList.Add(operationTypeInfo);
             }
 

@@ -4,6 +4,7 @@ using System.Linq;
 using AutoMapper;
 using DataAccess.Core;
 using DataAccess.Helpers;
+using DataAccess.MapperProfiles;
 using DataAccess.Models;
 using DataAccess.Projections;
 using Microsoft.EntityFrameworkCore;
@@ -25,23 +26,11 @@ namespace DataAccess.Repositories
         {
             IIncludableQueryable<Asset, ICollection<Transaction>> assets = Get(a => a.UserId == userId)
                 .Include(a => a.Transactions);
-            List<AssetBalanceInfo> assetBalanceInfoList = new List<AssetBalanceInfo>();
 
-            MapperConfiguration config = new MapperConfiguration(cfg =>
-            {
-                cfg.CreateMap<Asset, AssetBalanceInfo>();
-            });
+            MapperConfiguration config = new MapperConfiguration(cfg => cfg.AddProfile<AssetBalanceInfoProfile>());
             IMapper mapper = config.CreateMapper();
 
-            foreach (var asset in assets)
-            {
-                List<Transaction> transactions = asset.Transactions.ToList();
-                double balance = BalanceHelper.GetBalance(transactions);
-                AssetBalanceInfo assetBalanceInfo = mapper.Map<Asset, AssetBalanceInfo>(asset);
-                assetBalanceInfo.Balance = balance;
-                assetBalanceInfoList.Add(assetBalanceInfo);
-            }
-            return assetBalanceInfoList;
+            return assets.Select(asset => mapper.Map<AssetBalanceInfo>(asset)).ToList();
         }
     }
 }
