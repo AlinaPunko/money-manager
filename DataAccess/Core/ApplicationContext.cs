@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 namespace DataAccess.Core
 {
-    public sealed class ApplicationContext :DbContext
+    public sealed class ApplicationContext : DbContext
     {
         public DbSet<User> Users { get; set; }
         public DbSet<Asset> Assets { get; set; }
@@ -16,7 +16,10 @@ namespace DataAccess.Core
         public ApplicationContext(DbContextOptions options) : base(options)
         {
             if (Database.CanConnect())
+            {
                 return;
+            }
+                
             Database.Migrate();
             InsertDefaultValues();
         }

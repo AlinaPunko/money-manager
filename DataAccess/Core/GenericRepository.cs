@@ -11,7 +11,7 @@ namespace DataAccess.Core
 
         public GenericRepository(DbContext context)
         {
-            this.Context = context;
+            Context = context;
             DbSet = context.Set<TEntity>();
         }
 
