@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using DataAccess.Core;
-using DataAccess.Helpers;
 using DataAccess.MapperProfiles;
 using DataAccess.Models;
 using DataAccess.Projections;
@@ -21,15 +20,13 @@ namespace DataAccess.Repositories
                 .ToList();
         }
 
-
         public List<OperationTypeInfo> GetAmountOfParentCategories(CategoryType categoryType, Guid userId)
         {
             IQueryable<Category> categories = Get(c => c.Transactions.Any(t => t.Asset.UserId == userId && t.Date.Month == DateTime.Now.Month))
                 .Where(c => c.Type== categoryType);
             List<OperationTypeInfo> operationTypeInfoList = new List<OperationTypeInfo>();
 
-            MapperConfiguration config = new MapperConfiguration(cfg => cfg.AddProfile<OperationTypeInfoProfile>());
-            IMapper mapper = config.CreateMapper();
+            IMapper mapper = MapperWrapper.GetMapper();
 
             foreach (Category category in categories)
             {

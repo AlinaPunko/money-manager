@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using DataAccess.Core;
-using DataAccess.Helpers;
 using DataAccess.MapperProfiles;
 using DataAccess.Models;
 using DataAccess.Projections;
@@ -22,13 +21,11 @@ namespace DataAccess.Repositories
 
         public IReadOnlyList<UserPublicInfo> GetUsersSortedByName()
         {
-            List<User> orderedUsers =  Get()
+            List<User> orderedUsers = Get()
                 .OrderBy(user=>user.Name)
                 .ToList();
 
-            MapperConfiguration config = new MapperConfiguration(cfg => cfg.AddProfile<UserPublicInfoProfile>());
-            IMapper mapper = config.CreateMapper();
-
+            IMapper mapper = MapperWrapper.GetMapper();
             return mapper.Map<IReadOnlyList<UserPublicInfo>>(orderedUsers);
         }
 
@@ -49,8 +46,7 @@ namespace DataAccess.Repositories
                 return null;
             }
 
-            MapperConfiguration config = new MapperConfiguration(cfg => cfg.AddProfile<UserBalanceInfoProfile>());
-            IMapper mapper = config.CreateMapper();
+            IMapper mapper = MapperWrapper.GetMapper();
 
             UserBalanceInfo userBalanceInfo = mapper.Map<UserBalanceInfo>(user);
             return userBalanceInfo;

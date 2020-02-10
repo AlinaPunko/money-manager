@@ -34,6 +34,5 @@ namespace DataAccess.Models
             Name = name;
             Type = type;
         }
-
     }
 }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using DataAccess.Core;
-using DataAccess.Helpers;
 using DataAccess.MapperProfiles;
 using DataAccess.Models;
 using DataAccess.Projections;
@@ -27,8 +26,7 @@ namespace DataAccess.Repositories
             IIncludableQueryable<Asset, ICollection<Transaction>> assets = Get(a => a.UserId == userId)
                 .Include(a => a.Transactions);
 
-            MapperConfiguration config = new MapperConfiguration(cfg => cfg.AddProfile<AssetBalanceInfoProfile>());
-            IMapper mapper = config.CreateMapper();
+            IMapper mapper = MapperWrapper.GetMapper();
 
             return assets.Select(asset => mapper.Map<AssetBalanceInfo>(asset)).ToList();
         }

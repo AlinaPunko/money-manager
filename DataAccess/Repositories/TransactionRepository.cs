@@ -13,7 +13,12 @@ namespace DataAccess.Repositories
 {
     public class TransactionRepository : GenericRepository<Transaction>
     {
-        public TransactionRepository(DbContext context) : base(context) { }
+        readonly UnitOfWork unitOfWork;
+
+        public TransactionRepository(DbContext context) : base(context)
+        {
+            unitOfWork = new UnitOfWork();
+        }
 
         public IReadOnlyList<Transaction> GetAll()
         {
@@ -43,12 +48,11 @@ namespace DataAccess.Repositories
                 transaction.Asset.Balance -= transaction.Amount;
             }
 
-            Context.SaveChanges();
+            unitOfWork.Save();
         }
 
         public new void Remove(Transaction transaction)
         {
-            base.Remove(transaction);
             if (transaction.Category.Type == CategoryType.Income)
             {
                 transaction.Asset.Balance -= transaction.Amount;
@@ -58,7 +62,8 @@ namespace DataAccess.Repositories
                 transaction.Asset.Balance += transaction.Amount;
             }
 
-            Context.SaveChanges();
+            base.Remove(transaction);
+            unitOfWork.Save();
         }
 
         public new void Update(Transaction transaction)
@@ -77,7 +82,7 @@ namespace DataAccess.Repositories
                 transaction.Asset.Balance -= transaction.Amount;
             }
 
-            Context.SaveChanges();
+            unitOfWork.Save();
         }
 
         public IReadOnlyList<FullTransactionInfo> GetTransactionsByUser(Guid userId)
@@ -88,8 +93,7 @@ namespace DataAccess.Repositories
                 .ThenBy(t => t.Category.Name)
                 .ToList();
 
-            MapperConfiguration config = new MapperConfiguration(cfg => cfg.AddProfile<FullTransactionInfoProfile>());
-            IMapper mapper = config.CreateMapper();
+            IMapper mapper = MapperWrapper.GetMapper();
 
             return mapper.Map<IReadOnlyList<FullTransactionInfo>>(transactions);
         }

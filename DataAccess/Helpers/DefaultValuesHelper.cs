@@ -53,7 +53,6 @@ namespace DataAccess.Helpers
             
         }
 
-
         public static DateTime GetRandomDate(DateTime from, DateTime to)
         {
             TimeSpan range = to - from;

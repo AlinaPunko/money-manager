@@ -24,6 +24,8 @@ namespace DataAccess.Models
 
         public virtual ICollection<Asset> Assets { get; set; }
 
+        private static int saltLengthLimit = 32;
+
         public User() { }
 
         public User(string name, string email, string password)
@@ -36,7 +38,6 @@ namespace DataAccess.Models
             Hash = Convert.ToBase64String(hash);
         }
 
-        private static int saltLengthLimit = 32;
         private static string GetSalt()
         {
             return GetSalt(saltLengthLimit);

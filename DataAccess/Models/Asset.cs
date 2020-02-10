@@ -14,7 +14,6 @@ namespace DataAccess.Models
         public Guid UserId { get; set; }
         public double Balance { get; set; }
 
-        public virtual User User { get; set; }
         public virtual ICollection<Transaction> Transactions { get; set; }
 
         public Asset(string name, Guid userId)
@@ -23,14 +22,6 @@ namespace DataAccess.Models
             Name = name;
             UserId = userId;
             Balance = 0;
-        }
-
-        public Asset(string name, Guid userId, double balance)
-        {
-            Id = Guid.NewGuid();
-            Name = name;
-            UserId = userId;
-            Balance = balance;
         }
     }
 }

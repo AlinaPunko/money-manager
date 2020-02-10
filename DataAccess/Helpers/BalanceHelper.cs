@@ -13,7 +13,10 @@ namespace DataAccess.Helpers
 
         public static double GetUserBalance(User user)
         {
-            return user.Assets.Select(asset => asset.Transactions.ToList()).Select(GetBalance).Sum();
+            return user.Assets
+                .Select(asset => asset.Transactions.ToList())
+                .Select(GetBalance)
+                .Sum();
         }
 
         public static double GetSumMoney(IReadOnlyList<Transaction> transactions, CategoryType categoryType)
