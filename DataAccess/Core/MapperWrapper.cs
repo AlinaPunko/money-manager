@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Text;
-using AutoMapper;
+﻿using AutoMapper;
 using DataAccess.MapperProfiles;
 
 namespace DataAccess.Core

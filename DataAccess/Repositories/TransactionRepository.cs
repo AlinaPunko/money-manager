@@ -4,7 +4,6 @@ using System.Linq;
 using AutoMapper;
 using DataAccess.Core;
 using DataAccess.Helpers;
-using DataAccess.MapperProfiles;
 using DataAccess.Models;
 using DataAccess.Projections;
 using Microsoft.EntityFrameworkCore;
@@ -105,8 +104,8 @@ namespace DataAccess.Repositories
                 .OrderBy(t => t.Date)
                 .ToList();
 
-            double incomes = BalanceHelper.GetSumMoney(transactions, CategoryType.Income);
-            double expenses = BalanceHelper.GetSumMoney(transactions, CategoryType.Expense);
+            double incomes = BalanceHelper.SumMoney(transactions, CategoryType.Income);
+            double expenses = BalanceHelper.SumMoney(transactions, CategoryType.Expense);
 
             return transactions
                 .GroupBy(b => new { b.Date.Month, b.Date.Year },

@@ -8,7 +8,7 @@ namespace DataAccess.Helpers
     {
         public static double GetBalance(IReadOnlyList<Transaction> transactions)
         {
-            return GetSumMoney(transactions, CategoryType.Income) - GetSumMoney(transactions, CategoryType.Expense);
+            return SumMoney(transactions, CategoryType.Income) - SumMoney(transactions, CategoryType.Expense);
         }
 
         public static double GetUserBalance(User user)
@@ -19,17 +19,10 @@ namespace DataAccess.Helpers
                 .Sum();
         }
 
-        public static double GetSumMoney(IReadOnlyList<Transaction> transactions, CategoryType categoryType)
+        public static double SumMoney(IReadOnlyList<Transaction> transactions, CategoryType categoryType)
         {
-            if (categoryType == CategoryType.Income)
-            {
-                return transactions
-                    .Where(transaction => transaction.Category.Type == CategoryType.Income)
-                    .Sum(transaction => transaction.Amount);
-            }
-
             return transactions
-                .Where(transaction => transaction.Category.Type == CategoryType.Expense)
+                .Where(transaction => transaction.Category.Type == categoryType)
                 .Sum(transaction => transaction.Amount);
         }
     }

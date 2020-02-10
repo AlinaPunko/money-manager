@@ -1,6 +1,4 @@
-﻿using System;
-using DataAccess.Core;
-using DataAccess.Repositories;
+﻿using DataAccess.Core;
 
 namespace MoneyManager
 {

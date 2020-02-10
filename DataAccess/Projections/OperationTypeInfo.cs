@@ -1,5 +1,4 @@
-﻿
-namespace DataAccess.Projections
+﻿namespace DataAccess.Projections
 {
     public class OperationTypeInfo
     {
