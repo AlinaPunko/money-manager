@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -8,10 +9,19 @@ namespace DataAccess.Models
     public class User
     {
         public Guid Id { get; set; }
+
+        [Required]
         public string Name { get; set; }
+
+        [Required]
         public string Email { get; set; }
+
+        [Required]
         public string Hash { get; set; }
+
+        [Required]
         public string Salt { get; set; }
+
         public virtual ICollection<Asset> Assets { get; set; }
 
         public User() { }

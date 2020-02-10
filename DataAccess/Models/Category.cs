@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using JetBrains.Annotations;
 
 namespace DataAccess.Models
 {
@@ -9,17 +8,17 @@ namespace DataAccess.Models
     {
         [Key]
         public Guid Id { get; set; }
-        [NotNull]
+
+        [Required]
         public string Name { get; set; }
+
+        [Required]
         public CategoryType Type { get; set; }
+
         public Guid? ParentId { get; set; }
 
         public virtual ICollection<Transaction> Transactions { get; set; }
-
-        public virtual ICollection<Category> Children { get; set; }
         public virtual Category Parent { get; set; }
-
-        public Category() { }
 
         public Category(string name, CategoryType type, Guid parentId)
         {

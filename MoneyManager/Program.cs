@@ -1,6 +1,5 @@
 ﻿using System;
 using DataAccess.Core;
-using DataAccess.Models;
 using DataAccess.Repositories;
 
 namespace MoneyManager
@@ -11,9 +10,9 @@ namespace MoneyManager
         {
             using (ApplicationContext context = new ApplicationContextFactory().Create())
             {
-                UsersRepository repository = new UsersRepository(context);
+                TransactionRepository repository = new TransactionRepository(context);
                 var e = repository.GetAll();
-                foreach (User user in e)
+                foreach (var user in e)
                 {
                     Console.WriteLine(user);
                 }

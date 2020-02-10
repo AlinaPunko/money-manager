@@ -71,9 +71,6 @@ namespace DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<double>("Balance")
-                        .HasColumnType("float");
-
                     b.Property<Guid>("AssetId")
                         .HasColumnType("uniqueidentifier");
 

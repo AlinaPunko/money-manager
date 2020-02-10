@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20200203094332_ChangedCategoryType")]
-    partial class ChangedCategoryType
+    [Migration("20200210115113_AddedAnnotations")]
+    partial class AddedAnnotations
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -31,6 +31,7 @@ namespace DataAccess.Migrations
                         .HasColumnType("float");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("UserId")
@@ -50,6 +51,7 @@ namespace DataAccess.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("ParentId")
@@ -71,7 +73,7 @@ namespace DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<double>("Balance")
+                    b.Property<double>("Amount")
                         .HasColumnType("float");
 
                     b.Property<Guid>("AssetId")
@@ -102,15 +104,19 @@ namespace DataAccess.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Hash")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Salt")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -130,7 +136,7 @@ namespace DataAccess.Migrations
             modelBuilder.Entity("DataAccess.Models.Category", b =>
                 {
                     b.HasOne("DataAccess.Models.Category", "Parent")
-                        .WithMany("Children")
+                        .WithMany()
                         .HasForeignKey("ParentId");
                 });
 

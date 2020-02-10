@@ -1,21 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using JetBrains.Annotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace DataAccess.Models
 {
     public class Asset
     {
         public Guid Id { get; set; }
-        [NotNull]
+        [Required]
         public string Name { get; set; }
         public Guid UserId { get; set; }
         public double Balance { get; set; }
 
         public virtual User User { get; set; }
         public virtual ICollection<Transaction> Transactions { get; set; }
-
-        public Asset() { }
 
         public Asset(string name, Guid userId)
         {
