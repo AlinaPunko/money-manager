@@ -42,20 +42,16 @@ namespace DataAccess.Repositories
             User user = Get(u => u.Id==id)
                 .Include(u => u.Assets.Select(asset => asset.Transactions))
                 .FirstOrDefault();
-            double balance = 0;
             if (user == null)
                 return null;
 
-            foreach (Asset asset in user.Assets)
-            {
-                List<Transaction> transactions = asset.Transactions.ToList();
-                balance += BalanceHelper.GetBalance(transactions);
-            }
+            double balance = BalanceHelper.GetUserBalance(user);
 
             MapperConfiguration config = new MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<User, UserBalanceInfo>();
             });
+
             IMapper mapper = config.CreateMapper();
             UserBalanceInfo userBalanceInfo = mapper.Map<User, UserBalanceInfo>(user);
             userBalanceInfo.Balance = balance;

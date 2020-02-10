@@ -4,22 +4,27 @@ using DataAccess.Models;
 
 namespace DataAccess.Helpers
 {
-    public class BalanceHelper
+    public static class BalanceHelper
     {
         public static double GetBalance(IReadOnlyList<Transaction> transactions)
         {
-            return GetIncomes(transactions) - GetOutcomes(transactions);
+            return GetSumMoney(transactions, CategoryType.Income) - GetSumMoney(transactions, CategoryType.Expense);
         }
 
-        public static double GetIncomes(IReadOnlyList<Transaction> transactions)
+        public static double GetUserBalance(User user)
         {
-            return transactions
-                .Where(transaction => transaction.Category.Type == CategoryType.Income)
-                .Sum(transaction => transaction.Amount);
+            return user.Assets.Select(asset => asset.Transactions.ToList()).Select(GetBalance).Sum();
         }
 
-        public static double GetOutcomes(IReadOnlyList<Transaction> transactions)
+        public static double GetSumMoney(IReadOnlyList<Transaction> transactions, CategoryType categoryType)
         {
+            if (categoryType == CategoryType.Income)
+            {
+                return transactions
+                    .Where(transaction => transaction.Category.Type == CategoryType.Income)
+                    .Sum(transaction => transaction.Amount);
+            }
+
             return transactions
                 .Where(transaction => transaction.Category.Type == CategoryType.Expense)
                 .Sum(transaction => transaction.Amount);

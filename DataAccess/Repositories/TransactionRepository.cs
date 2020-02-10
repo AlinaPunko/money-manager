@@ -105,8 +105,8 @@ namespace DataAccess.Repositories
                 .OrderBy(t => t.Date)
                 .ToList();
 
-            double incomes = BalanceHelper.GetIncomes(transactions);
-            double expenses = BalanceHelper.GetOutcomes(transactions);
+            double incomes = BalanceHelper.GetSumMoney(transactions, CategoryType.Income);
+            double expenses = BalanceHelper.GetSumMoney(transactions, CategoryType.Expense);
 
             return transactions
                 .GroupBy(b => new { b.Date.Month, b.Date.Year },
