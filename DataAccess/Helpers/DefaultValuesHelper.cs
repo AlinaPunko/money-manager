@@ -1,10 +1,9 @@
 ﻿using System;
-using DataAccess.Enums;
 using DataAccess.Models;
 
-namespace DataAccess
+namespace DataAccess.Helpers
 {
-    public class DefaultValues
+    public static class DefaultValuesHelper
     {
         public static User[] GenerateDefaultUsers()
         {
@@ -57,9 +56,9 @@ namespace DataAccess
 
         public static DateTime GetRandomDate(DateTime from, DateTime to)
         {
-            var range = to - from;
+            TimeSpan range = to - from;
             Random random = new Random();
-            var randTimeSpan = new TimeSpan((long)(random.NextDouble() * range.Ticks));
+            TimeSpan randTimeSpan = new TimeSpan((long)(random.NextDouble() * range.Ticks));
 
             return from + randTimeSpan;
         }

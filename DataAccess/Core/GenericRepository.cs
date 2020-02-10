@@ -6,43 +6,43 @@ namespace DataAccess.Core
 {
     public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : class
     {
-        public DbContext context;
-        public DbSet<TEntity> dbSet;
+        protected DbContext Context;
+        protected DbSet<TEntity> DbSet;
 
         public GenericRepository(DbContext context)
         {
-            this.context = context;
-            dbSet = context.Set<TEntity>();
+            this.Context = context;
+            DbSet = context.Set<TEntity>();
         }
 
         protected IQueryable<TEntity> Get(Func<TEntity, bool> predicate=null)
         {
             if (predicate == null)
             {
-                return dbSet.AsQueryable();
+                return DbSet.AsQueryable();
             }
-            return dbSet.Where(predicate).AsQueryable();
+            return DbSet.Where(predicate).AsQueryable();
         }
 
         public TEntity GetById(Guid id)
         {
-            return dbSet.Find(id);
+            return DbSet.Find(id);
         }
 
         public void Add(TEntity item)
         {
-            dbSet.Add(item);
-            context.SaveChanges();
+            DbSet.Add(item);
+            Context.SaveChanges();
         }
         public void Update(TEntity item)
         {
-            context.Entry(item).State = EntityState.Modified;
-            context.SaveChanges();
+            Context.Entry(item).State = EntityState.Modified;
+            Context.SaveChanges();
         }
         public void Remove(TEntity item)
         {
-            dbSet.Remove(item);
-            context.SaveChanges();
+            DbSet.Remove(item);
+            Context.SaveChanges();
         }
     }
 }

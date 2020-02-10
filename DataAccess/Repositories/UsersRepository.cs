@@ -11,11 +11,7 @@ namespace DataAccess.Repositories
 {
     public class UsersRepository : GenericRepository<User>
     {
-        
-        public void AddUser(User user)
-        {
-            Add(user);
-        }
+        public UsersRepository(DbContext context) : base(context) { }
 
         public IReadOnlyList<User> GetAll()
         {
@@ -25,9 +21,9 @@ namespace DataAccess.Repositories
 
         public IReadOnlyList<UserPublicInfo> GetUsersSortedByName()
         {
-            var orderedUsers =  Get().OrderBy(user=>user.Name)
+            List<User> orderedUsers =  Get().OrderBy(user=>user.Name)
                 .ToList();
-            var config = new MapperConfiguration(cfg => {
+            MapperConfiguration config = new MapperConfiguration(cfg => {
                 cfg.CreateMap<User, UserPublicInfo>();
             });
 
@@ -35,11 +31,6 @@ namespace DataAccess.Repositories
             return mapper.Map<List<User>, IReadOnlyList<UserPublicInfo>>(orderedUsers);
         }
 
-        public new User GetById(Guid id)
-        {
-            return base.GetById(id);
-        }
-        
         public User GetByEmail(string email)
         {
             return Get(user => user.Email == email)
@@ -48,32 +39,27 @@ namespace DataAccess.Repositories
 
         public UserBalanceInfo GetUserWithBalance(Guid id)
         {
-            var user = Get(u => u.Id==id)
+            User user = Get(u => u.Id==id)
                 .Include(u => u.Assets.Select(asset => asset.Transactions))
                 .FirstOrDefault();
             double balance = 0;
             if (user == null)
                 return null;
 
-            foreach (var asset in user.Assets)
+            foreach (Asset asset in user.Assets)
             {
-                var transactions = asset.Transactions.ToList();
+                List<Transaction> transactions = asset.Transactions.ToList();
                 balance += BalanceHelper.GetBalance(transactions);
             }
 
-            var config = new MapperConfiguration(cfg =>
+            MapperConfiguration config = new MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<User, UserBalanceInfo>();
             });
-            var mapper = config.CreateMapper();
-            var userBalanceInfo = mapper.Map<User, UserBalanceInfo>(user);
+            IMapper mapper = config.CreateMapper();
+            UserBalanceInfo userBalanceInfo = mapper.Map<User, UserBalanceInfo>(user);
             userBalanceInfo.Balance = balance;
             return userBalanceInfo;
-        }
-
-        public UsersRepository(DbContext context) : base(context)
-        {
-            
         }
     }
 }

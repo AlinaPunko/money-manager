@@ -10,16 +10,12 @@ namespace DataAccess.Repositories
 {
     public class CategoriesRepository : GenericRepository<Category>
     {
+        public CategoriesRepository(DbContext context) : base(context) { }
 
         public IReadOnlyList<Category> GetAll()
         {
             return Get()
                 .ToList();
-        }
-
-        public new Category GetById(Guid id)
-        {
-            return base.GetById(id);
         }
 
         public int GetNumberOfParents(Category category,int amount)
@@ -32,15 +28,14 @@ namespace DataAccess.Repositories
 
             numberOfParents++;
             return GetNumberOfParents(category.Parent, numberOfParents);
-
         }
 
         public List<OperationTypeInfo> GetAmountOfParentCategories(int operationType, Guid userId)
         {
-            var categories = Get(c => c.Transactions.Any(t => t.Asset.UserId == userId && t.Date.Month == DateTime.Now.Month));
-            var operationTypeInfoList = new List<OperationTypeInfo>();
+            IQueryable<Category> categories = Get(c => c.Transactions.Any(t => t.Asset.UserId == userId && t.Date.Month == DateTime.Now.Month));
+            List<OperationTypeInfo> operationTypeInfoList = new List<OperationTypeInfo>();
 
-            foreach (var category in categories)
+            foreach (Category category in categories)
             {
                 OperationTypeInfo operationTypeInfo = new OperationTypeInfo
                 {
@@ -51,11 +46,6 @@ namespace DataAccess.Repositories
             }
 
             return operationTypeInfoList;
-        }
-
-        public CategoriesRepository(DbContext context) : base(context)
-        {
-
         }
     }
 }

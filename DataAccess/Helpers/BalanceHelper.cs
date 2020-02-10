@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using DataAccess.Enums;
 using DataAccess.Models;
 
 namespace DataAccess.Helpers

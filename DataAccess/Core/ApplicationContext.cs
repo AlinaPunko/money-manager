@@ -1,7 +1,8 @@
 ﻿using System;
-using DataAccess.Enums;
+using DataAccess.Helpers;
 using DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace DataAccess.Core
 {
@@ -14,30 +15,28 @@ namespace DataAccess.Core
 
         public ApplicationContext(DbContextOptions options) : base(options)
         {
-            if (!Database.CanConnect())
-            {
-                Database.Migrate();
-                InsertDefaultValues();
-            }
+            if (Database.CanConnect())
+                return;
+            Database.Migrate();
+            InsertDefaultValues();
         }
 
         private void InsertDefaultValues()
         {
-            using (var transaction = Database.BeginTransaction())
+            User[] users = DefaultValuesHelper.GenerateDefaultUsers();
+            Asset[] assets = DefaultValuesHelper.GenerateDefaultAssets(users);
+            Category[] categories = DefaultValuesHelper.GenerateDefaultCategories();
+            Transaction[] transactions = DefaultValuesHelper.GenerateDefaultTransactions(assets, categories);
+
+            using (IDbContextTransaction transaction = Database.BeginTransaction())
             {
                 try
                 {
-                    var users = DefaultValues.GenerateDefaultUsers();
-                    var assets = DefaultValues.GenerateDefaultAssets(users);
-                    var categories = DefaultValues.GenerateDefaultCategories();
-                    var transactions = 
-                        DefaultValues.GenerateDefaultTransactions(assets, categories);
-
                     Users.AddRange(users);
                     Assets.AddRange(assets);
                     Categories.AddRange(categories);
                     Transactions.AddRange(transactions);
-                    foreach (var transactionsItem in transactions)
+                    foreach (Transaction transactionsItem in transactions)
                     {
                         if (transactionsItem.Category.Type == CategoryType.Income)
                         {

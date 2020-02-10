@@ -1,6 +1,4 @@
-﻿using System;
-using DataAccess.Core;
-using DataAccess.Repositories;
+﻿using DataAccess.Core;
 
 namespace MoneyManager
 {
@@ -8,7 +6,7 @@ namespace MoneyManager
     {
         static void Main(string[] args)
         {
-            using (var context = new ApplicationContextFactory().Create())
+            using (ApplicationContext context = new ApplicationContextFactory().Create())
             {
 
             }
