@@ -1,4 +1,4 @@
-﻿using System;
+﻿using DataAccess.Core;
 
 namespace MoneyManager
 {
@@ -6,7 +6,10 @@ namespace MoneyManager
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            using (ApplicationContext context = new ApplicationContextFactory().Create())
+            {
+
+            }
         }
     }
 }

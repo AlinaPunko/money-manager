@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Migrations\20200130154032_Initial.cs" />
+    <Compile Remove="Migrations\20200130154032_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20200130154210_Initial.cs" />
+    <Compile Remove="Migrations\20200130154210_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20200130154727_Initial.cs" />
+    <Compile Remove="Migrations\20200130154727_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20200130155803_Initial.cs" />
+    <Compile Remove="Migrations\20200130155803_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20200130172836_Initial.cs" />
+    <Compile Remove="Migrations\20200130172836_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20200130175158_Initial.cs" />
+    <Compile Remove="Migrations\20200130175158_Initial.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="9.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="3.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="3.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.1" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.7.0" />
+  </ItemGroup>
+
+</Project>
